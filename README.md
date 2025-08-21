@@ -1,2 +1,2 @@
 # Gentooui
-A TUI for installing gentoo
+A TUI for installing gentoo written in Python (WIP)
