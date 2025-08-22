@@ -1,0 +1,89 @@
+# Example GentooUI configuration for minimal server installation
+# This configuration installs a basic server system without desktop
+
+# Application settings
+dry_run: false
+verbose: false
+log_level: INFO
+
+# Target paths
+mount_point: /mnt/gentoo
+work_dir: /tmp/gentooui
+
+# Disk configuration
+disk:
+  target_disk: /dev/sda
+  partition_scheme: gpt
+  boot_partition_size: 256M
+  swap_size: 2G
+  root_filesystem: ext4
+  encryption_enabled: true
+  encryption_cipher: aes-xts-plain64
+
+# Stage3 configuration
+stage3:
+  mirror_url: https://distfiles.gentoo.org
+  architecture: amd64
+  variant: hardened
+  auto_select: true
+  verify_signature: true
+
+# Portage configuration
+portage:
+  make_opts: -j$(nproc)
+  use_flags:
+    - bindist
+    - systemd
+    - -X
+    - -gtk
+    - -qt5
+    - minimal
+  accept_keywords: []  # Stable only
+  mirrors:
+    - https://distfiles.gentoo.org
+  emerge_opts: --ask --verbose
+
+# Kernel configuration
+kernel:
+  kernel_source: hardened-sources
+  config_method: genkernel
+  initramfs: true
+  modules_autoload: false
+  firmware_install: true
+  compile_jobs: 0
+
+# Bootloader configuration
+bootloader:
+  bootloader: grub
+  target: x86_64-efi
+  install_location: /boot/efi
+  timeout: 3
+  additional_params:
+    - quiet
+    - splash
+
+# System configuration
+system:
+  hostname: gentoo-server
+  timezone: UTC
+  locale: en_US.UTF-8
+  keymap: us
+  root_password: null  # Will be prompted
+  create_user: false
+  username: null
+  user_password: null
+  enable_ssh: true
+  install_desktop: false
+  desktop_environment: null
+
+# Network configuration  
+network:
+  interface: auto
+  dhcp: false
+  static_ip: 192.168.1.100
+  netmask: 255.255.255.0
+  gateway: 192.168.1.1
+  dns_servers:
+    - 1.1.1.1
+    - 1.0.0.1
+  hostname_resolution: true

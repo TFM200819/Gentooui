@@ -1,0 +1,92 @@
+# Example GentooUI configuration for desktop installation
+# This configuration installs a complete desktop system with XFCE
+
+# Application settings
+dry_run: false
+verbose: true
+log_level: INFO
+
+# Target paths
+mount_point: /mnt/gentoo
+work_dir: /tmp/gentooui
+
+# Disk configuration
+disk:
+  target_disk: /dev/sda
+  partition_scheme: gpt  # gpt or mbr
+  boot_partition_size: 512M
+  swap_size: 8G
+  root_filesystem: ext4  # ext4, xfs, btrfs
+  encryption_enabled: false
+  encryption_cipher: aes-xts-plain64
+
+# Stage3 configuration
+stage3:
+  mirror_url: https://distfiles.gentoo.org
+  architecture: amd64
+  variant: hardened  # hardened, systemd, musl
+  auto_select: true
+  verify_signature: true
+
+# Portage configuration
+portage:
+  make_opts: -j$(nproc)
+  use_flags:
+    - bindist
+    - systemd
+    - pulseaudio
+    - gtk
+    - qt5
+    - X
+    - opengl
+    - alsa
+    - networkmanager
+  accept_keywords:
+    - ~amd64
+  mirrors:
+    - https://distfiles.gentoo.org
+    - rsync://rsync.gentoo.org/gentoo-portage
+  emerge_opts: --ask --verbose --tree
+
+# Kernel configuration
+kernel:
+  kernel_source: gentoo-sources
+  config_method: genkernel  # genkernel, manual, distribution
+  initramfs: true
+  modules_autoload: true
+  firmware_install: true
+  compile_jobs: 0  # 0 = auto-detect
+
+# Bootloader configuration
+bootloader:
+  bootloader: grub  # grub, systemd-boot, lilo
+  target: x86_64-efi  # x86_64-efi, i386-pc
+  install_location: /boot/efi
+  timeout: 5
+  additional_params: []
+
+# System configuration
+system:
+  hostname: gentoo-desktop
+  timezone: UTC
+  locale: en_US.UTF-8
+  keymap: us
+  root_password: null  # Will be prompted
+  create_user: true
+  username: user
+  user_password: null  # Will be prompted
+  enable_ssh: true
+  install_desktop: true
+  desktop_environment: xfce  # xfce, kde, gnome
+
+# Network configuration  
+network:
+  interface: auto
+  dhcp: true
+  static_ip: null
+  netmask: null
+  gateway: null
+  dns_servers:
+    - 8.8.8.8
+    - 8.8.4.4
+  hostname_resolution: true
